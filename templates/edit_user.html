@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDIT USER INFO</title>
+</head>
+<body>
+
+<h1>Edit User Info</h1>
+
+<form action="/users/{{user.id}}/edit" method="post">
+    <label for="first_name">First Name</label>
+    <input type="text" name="first_name" id="first_name" value="{{user.first_name}}">
+    <label for="last_name">Last Name</label>
+    <input type="text" name="last_name" id="last_name" value="{{user.last_name}}">
+    <label for="email">Email</label>
+    <input type="text" name="email" id="email" value="{{user.email}}">
+    <input type="submit">
+</form>
+<form action="/">
+    <input type="submit" value="Cancel">
+</form>
+<form action="/users/{{user.id}}/delete"> <button type="submit">delete</button></form>
+</body>
+</html>
