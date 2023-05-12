@@ -60,3 +60,12 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>/posts/new')
+def add_post(user_id):
+    """adding a post for specific user"""
+    user = Users.query.get_or_404(user_id)
+    db.session.add(user.post)
+    db.session.commit()
+    render_template('user_post.html', user=user)
