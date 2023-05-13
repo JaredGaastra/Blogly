@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from models import db, connect_db, Users
+from models import db, connect_db, Users, Posts
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "secret"
+
 
 connect_db(app)
 
@@ -61,11 +62,17 @@ def delete_user(user_id):
 
     return redirect(url_for('home'))
 
-
-@app.route('/users/<int:user_id>/posts/new')
+@app.route('/users/<int:user_id>/posts/new', methods=['GET', 'POST'])
 def add_post(user_id):
     """adding a post for specific user"""
     user = Users.query.get_or_404(user_id)
-    db.session.add(user.post)
-    db.session.commit()
-    render_template('user_post.html', user=user)
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+
+        new_post = Posts(title=title, content=content, user_id=user_id)
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(url_for('user_detail', user_id=user_id))
+    return render_template('user_post.html', user=user)

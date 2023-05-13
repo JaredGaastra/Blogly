@@ -10,7 +10,7 @@
     <h1>User details</h1>
     <p>First Name: {{user.first_name}}</p>
     <p>Last Name: {{user.last_name}}</p>
-    <img src="{{user.email}}" alt="Users profile Picture">
+    <img src="{{user.image_url}}" alt="Users profile Picture">
 
     <h2>Posts</h2>
     {% for post in posts %}
@@ -19,7 +19,9 @@
     </ul>
     {% endfor%}
 
-    <form action="/users/{{user_id}}/posts/new'">Add Post</form>
+    <form action="/users/{{user.id}}/posts/new'">
+        <button>Add Post</button> 
+    </form>
 
     <a href="/">Return to list</a>
     <a href="/users/{{user.id}}/edit">Edit</a>
