@@ -7,6 +7,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "secret"
 
+app.app_context().push() 
 
 connect_db(app)
 
@@ -66,6 +67,7 @@ def delete_user(user_id):
 def add_post(user_id):
     """adding a post for specific user"""
     user = Users.query.get_or_404(user_id)
+
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
