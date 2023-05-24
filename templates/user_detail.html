@@ -13,12 +13,11 @@
     <img src="{{user.image_url}}" alt="Users profile Picture">
 
     <h2>Posts</h2>
-    {% for post in posts %}
     <ul>
-        <li>{{user.posts.title}}</li>
+    {% for post in user_posts %}
+        <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+    {% endfor %}
     </ul>
-    {% endfor%}
-
     <form action="/users/{{user.id}}/posts/new">
         <button>Add Post</button> 
     </form>
