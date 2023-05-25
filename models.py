@@ -52,6 +52,8 @@ class Posts(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    tags= db.relationship('Tags', back_populates='tag_posts', secondary='post_tags')
    
     all_users = db.relationship('Users', back_populates='user_posts')
 

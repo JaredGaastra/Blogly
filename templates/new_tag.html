@@ -15,5 +15,9 @@
     <form action="/">
         <input type="submit" value="Cancel">
     </form>
+
+    {% for tag in tags %}
+        <p><a href="/tags/{{tag_id}}/edit"></a>{{tag.name}}</p>
+    {% endfor %}
 </body>
 </html>

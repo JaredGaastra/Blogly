@@ -1,12 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from models import db, connect_db, Users, Posts
+from models import db, connect_db, Users, Posts, Tags, PostTag
 from datetime import datetime
+from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
+# the toolbar is only enabled in debug mode:
+app.debug = True
 
+
+app.config['SECRET_KEY'] = "secret"
+toolbar = DebugToolbarExtension(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = "secret"
+
 
 app.app_context().push() 
 
@@ -34,12 +40,12 @@ def new_user():
         return redirect(url_for('home'))
     return render_template('new_user.html')
 
-@app.route('/users/<int:user_id>')
+@app.route('/users/<int:user_id>', methods=['GET', 'POST'])
 def user_detail(user_id):
     """user detail"""
-    
+    posts = Posts.query.filter_by(user_id = user_id).all()
     user = Users.query.get_or_404(user_id)
-    return render_template('user_detail.html', user=user)
+    return render_template('user_detail.html', user=user, posts=posts)
 
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
 def edit_user(user_id):
@@ -64,11 +70,15 @@ def delete_user(user_id):
 
     return redirect(url_for('home'))
 
+
+#POST ROUTES--------------------------------------------------------------
+
 @app.route('/users/<int:user_id>/posts/new', methods=['GET', 'POST'])
 def add_post(user_id):
     """adding a post for specific user"""
     user = Users.query.get_or_404(user_id)
-    posts = Users.query.get_or_404(user_id).user_posts
+    
+
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -77,8 +87,8 @@ def add_post(user_id):
         db.session.add(new_post)
         db.session.commit()
 
-        return redirect(url_for('user_detail', user_id=user_id, posts=posts))
-    return render_template('user_post.html', user=user , posts=posts)
+        return redirect(url_for('user_detail', user_id=user_id))
+    return render_template('user_post.html', user=user )
 
 @app.route('/posts/<int:post_id>')
 def post_detail(post_id):
@@ -122,7 +132,7 @@ def tags():
 def new_tag():
     """new tag form"""
     if request.method == 'POST':
-        name = request.form['name']
+        name = request.form['tag']
 
         new_tag = Tags(name=name)
         db.session.add(new_tag)
